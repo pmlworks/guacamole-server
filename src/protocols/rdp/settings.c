@@ -681,7 +681,7 @@ enum RDP_ARGS_IDX {
 
     /**
      * "true" if all graphical updates for this connection should use lossless
-     * compresion only, "false" or blank otherwise.
+     * compression only, "false" or blank otherwise.
      */
     IDX_FORCE_LOSSLESS,
 
@@ -1273,7 +1273,6 @@ guac_rdp_settings* guac_rdp_parse_args(guac_user* user,
         settings->normalize_clipboard = 0;
         settings->clipboard_crlf = 0;
     }
-
 
     /* Parse Wake-on-LAN (WoL) settings */
     settings->wol_send_packet =

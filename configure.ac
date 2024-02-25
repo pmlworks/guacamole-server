@@ -18,7 +18,7 @@
 #
 
 AC_PREREQ([2.61])
-AC_INIT([guacamole-server], [1.5.4])
+AC_INIT([guacamole-server], [1.5.5])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AM_SILENT_RULES([yes])
@@ -67,6 +67,14 @@ AC_CHECK_LIB([cairo], [cairo_create], [CAIRO_LIBS=-lcairo],
 AC_CHECK_LIB([pthread], [pthread_create], [PTHREAD_LIBS=-lpthread
               AC_DEFINE([HAVE_LIBPTHREAD],,
                         [Whether libpthread was found])])
+
+# librt
+AC_CHECK_FUNC([timer_create], [AC_MSG_RESULT([timer_create was found without librt.])],
+              [AC_CHECK_LIB([rt], [timer_create],
+                            [AC_MSG_RESULT([timer_create was found in librt.])
+                                           RT_LIBS=-lrt],
+                            [AC_MSG_ERROR([timer_create could not be found.])])
+              ])
 
 # Include libdl for dlopen() if necessary
 AC_CHECK_LIB([dl], [dlopen],
@@ -128,6 +136,7 @@ AC_SUBST(MATH_LIBS)
 AC_SUBST(PNG_LIBS)
 AC_SUBST(JPEG_LIBS)
 AC_SUBST(CAIRO_LIBS)
+AC_SUBST(RT_LIBS)
 AC_SUBST(PTHREAD_LIBS)
 AC_SUBST(UUID_LIBS)
 AC_SUBST(CUNIT_LIBS)
@@ -634,7 +643,6 @@ then
 
 fi
 
-
 #
 # FreeRDP 2 (libfreerdp2, libfreerdp-client2, and libwinpr2)
 #
@@ -768,7 +776,6 @@ then
     [AC_MSG_RESULT([no])])
 
 fi
-
 
 # Glyph callback variants
 if test "x${have_freerdp2}" = "xyes"

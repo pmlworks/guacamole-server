@@ -17,7 +17,6 @@
  * under the License.
  */
 
-
 #include "common/clipboard.h"
 #include "terminal/buffer.h"
 #include "terminal/display.h"
@@ -253,7 +252,7 @@ void guac_terminal_select_resume(guac_terminal* terminal, int row, int column) {
 
 /**
  * Appends the text within the given subsection of a terminal row to the
- * clipboard. The provided coordinates are considered inclusiveley (the
+ * clipboard. The provided coordinates are considered inclusively (the
  * characters at the start and end column are included in the copied
  * text). Any out-of-bounds coordinates will be automatically clipped within
  * the bounds of the given row.

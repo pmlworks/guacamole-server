@@ -295,10 +295,6 @@ guac_client* guac_client_alloc() {
     guac_rwlock_init(&(client->__users_lock));
     guac_rwlock_init(&(client->__pending_users_lock));
 
-    /* Initialize the write lock flags to 0, as threads won't have yet */
-    pthread_key_create(&(client->__users_lock.key), (void *) 0);
-    pthread_key_create(&(client->__pending_users_lock.key), (void *) 0);
-
     /* The timer will be lazily created in the child process */
     client->__pending_users_timer_state = GUAC_CLIENT_PENDING_TIMER_UNREGISTERED;
 
@@ -1025,7 +1021,7 @@ int guac_client_owner_supports_required(guac_client* client) {
 }
 
 /**
- * A callback function that is invokved by guac_client_owner_notify_join() to
+ * A callback function that is invoked by guac_client_owner_notify_join() to
  * notify the owner of a connection that another user has joined the
  * connection, returning zero if the message is sent successfully, or non-zero
  * if an error occurs.
@@ -1084,7 +1080,7 @@ int guac_client_owner_notify_join(guac_client* client, guac_user* joiner) {
 }
 
 /**
- * A callback function that is invokved by guac_client_owner_notify_leave() to
+ * A callback function that is invoked by guac_client_owner_notify_leave() to
  * notify the owner of a connection that another user has left the connection,
  * returning zero if the message is sent successfully, or non-zero
  * if an error occurs.

@@ -280,7 +280,6 @@ static int __guac_common_surface_is_opaque(guac_common_surface* surface,
 
 }
 
-
 /**
  * Returns whether the given rectangle should be combined into the existing
  * dirty rectangle, to be eventually flushed as image data, or would be best
@@ -1324,7 +1323,7 @@ void guac_common_surface_resize(guac_common_surface* surface, int w, int h) {
 
     /* Allocate completely new heat map (can safely discard old stats) */
     guac_mem_free(surface->heat_map);
-    surface->heat_map = guac_mem_alloc(heat_width, heat_height,
+    surface->heat_map = guac_mem_zalloc(heat_width, heat_height,
             sizeof(guac_common_surface_heat_cell));
 
     /* Resize dirty rect to fit new surface dimensions */
@@ -2009,12 +2008,13 @@ void guac_common_surface_dup(guac_common_surface* surface,
         guac_protocol_send_move(socket, surface->layer,
                 surface->parent, surface->x, surface->y, surface->z);
 
-        /* Synchronize multi-touch support level */
-        guac_protocol_send_set_int(surface->socket, surface->layer,
-                GUAC_PROTOCOL_LAYER_PARAMETER_MULTI_TOUCH,
-                surface->touches);
-
     }
+
+    /* Synchronize multi-touch support level */
+    else if (surface->layer->index == 0)
+        guac_protocol_send_set_int(socket, surface->layer,
+                GUAC_PROTOCOL_LAYER_PARAMETER_MULTI_TOUCH,
+                    surface->touches);
 
     /* Sync size to new socket */
     guac_protocol_send_size(socket, surface->layer,
